@@ -14,3 +14,10 @@ Some of its features are:
 
 The solo developer of this program (Bryan!) made this to help 
 his own family members lose weight and live healthier and happier lives!
+
+### User Stories
+
+- As a user, I want to create and add members to my family
+- As a user, I want to remove certain members or entire the family
+- As a user, I want to view the record of all family members for comparison
+- As a user, I want to add data to my record
