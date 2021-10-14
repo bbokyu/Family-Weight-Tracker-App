@@ -18,6 +18,6 @@ his own family members lose weight and live healthier and happier lives!
 ### User Stories
 
 - As a user, I want to create and add members to my family
-- As a user, I want to remove certain members or entire the family
+- As a user, I want to remove certain members from the family
 - As a user, I want to view the record of all family members for comparison
-- As a user, I want to add data to my record
+- As a user, I want to add data to certain members
