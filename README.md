@@ -1,16 +1,23 @@
 # Family Weight Tracker
 ### For families to become healthier together!
 
-This program is designed to help family members track 
-and compare their progress of weight loss!
+The goal of this program is to help family members track 
+and compare their progress of weight loss! While creating this app,
+my main focus will be simplicity and user experience. This is 
+because at its core, weight tracking can be achieved only using pen and paper. 
+No need to overcomplicate the process and let the user incorporate
+the app as seamlessly as possibly into their weight loss journey!
 
-Some of its features are:
+**Some of its features are:**
 
 - Individual control of one's data
 - Easy access and view of progress between family members
 
-The solo developer of this program (Bryan!) made this to help 
-his own family members lose weight and live healthier and happier lives!
+The developer of this program (Bryan!) made this to help 
+his own family members lose weight and live healthier and happier
+lives! It is mainly targeted towards groups of people
+who will be living together, but it can also be used by individuals
+as well!
 
 ### User Stories
 

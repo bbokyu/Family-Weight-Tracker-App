@@ -58,7 +58,7 @@ public class FamilyWeightTrackerApp {
         System.out.println("\tq -> quit");
     }
 
-    // MODIFIES: this
+
     // EFFECTS: initializes family
     private void init() {
         input = new Scanner(System.in);
@@ -77,7 +77,7 @@ public class FamilyWeightTrackerApp {
 
     }
 
-    // MODIFIES: this
+
     // EFFECTS: processes user command
     private void processCommand(String command) {
         switch (command) {
@@ -99,8 +99,8 @@ public class FamilyWeightTrackerApp {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds a member to the family
+
+    // EFFECTS: Prints out the selected member's log
     private void checkLog() {
 
         String selection = "";
@@ -141,6 +141,7 @@ public class FamilyWeightTrackerApp {
         }
     }
 
+    // MODIFIES: Member in Family class
     // EFFECTS: adds weight to the chosen member
     private void addWeight() {
 
