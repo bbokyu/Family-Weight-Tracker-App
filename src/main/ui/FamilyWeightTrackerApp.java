@@ -20,7 +20,8 @@ public class FamilyWeightTrackerApp {
         runApp();
     }
 
-    //some parts of code have been taken from CPSC 210 Teller App
+    //some parts of code have been taken from CPSC 210 Teller App Repo below
+    // URL: https://github.students.cs.ubc.ca/CPSC210/TellerApp
     // MODIFIES: this
     // EFFECTS: processes user input
     private void runApp() {
