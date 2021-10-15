@@ -1,5 +1,7 @@
 package model;
 
+import model.exceptions.NegativeValueException;
+
 import java.util.ArrayList;
 
 
@@ -18,7 +20,12 @@ public class Member {
     }
 
 
-    public void addWeightLog(Double weight) {
+    //MODIFIES: this
+    //EFFECTS: Adds given weight to member's weight log
+    public void addWeightLog(Double weight) throws NegativeValueException {
+        if (weight < 0) {
+            throw new NegativeValueException();
+        }
         Log temp = new Log(weight);
         weightLog.add(temp);
     }
@@ -27,7 +34,7 @@ public class Member {
         return name;
     }
 
-    public ArrayList<Log> getWeightLog() {
+    public ArrayList<Log> getWeightLogs() {
         return weightLog;
     }
 

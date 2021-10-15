@@ -2,8 +2,8 @@ package ui;
 
 import model.Log;
 import model.Member;
+import model.exceptions.NegativeValueException;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -47,6 +47,7 @@ public class FamilyWeightTrackerApp {
     }
 
 
+    // EFFECTS: Prompts menu to user
     private void displayMenu() {
         System.out.println("\nHow can I help you today?:");
         System.out.println("\ta -> add new member");
@@ -57,7 +58,7 @@ public class FamilyWeightTrackerApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: initializes accounts
+    // EFFECTS: initializes family
     private void init() {
         input = new Scanner(System.in);
         family = new ArrayList<>();
@@ -66,8 +67,13 @@ public class FamilyWeightTrackerApp {
         Member bryan = new Member("Bryan", 165);
         family.add(ethan);
         family.add(bryan);
-        ethan.addWeightLog(75.0);
-        bryan.addWeightLog(65.0);
+        try {
+            ethan.addWeightLog(75.0);
+            bryan.addWeightLog(65.0);
+        } catch (NegativeValueException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // MODIFIES: this
@@ -137,7 +143,7 @@ public class FamilyWeightTrackerApp {
     // EFFECTS: adds weight to the chosen member
     private void addWeight() {
 
-        String selection = "";  // force entry into loop
+        String selection = "";
         Double weight;
         Member selectedMem;
 
@@ -147,7 +153,12 @@ public class FamilyWeightTrackerApp {
             selectedMem = selectMember();
             System.out.println("What is your weight today? (KG)");
             weight = input.nextDouble();
-            selectedMem.addWeightLog(weight);
+            try {
+                selectedMem.addWeightLog(weight);
+            } catch (NegativeValueException e) {
+                System.out.println("Cannot add negative weight!!!");
+                break;
+            }
             System.out.println(weight + " KG has been added to " + selectedMem.getName() + "'s log on " +  date);
             System.out.println("\nEnter 'b' to return!");
             selection = input.next();
@@ -155,7 +166,7 @@ public class FamilyWeightTrackerApp {
         }
     }
 
-    //MODFIES: this
+    // MODIFIES: this
     // EFFECTS: deletes member from the family
     private void deleteMember() {
 
@@ -188,7 +199,7 @@ public class FamilyWeightTrackerApp {
 
     // EFFECTS: prints weight log of given member
     public void printWeightLog(Member mem) {
-        for (Log log: mem.getWeightLog()) {
+        for (Log log: mem.getWeightLogs()) {
             System.out.println(log.getDate() + "    " + log.getWeight() + " KG");
         }
     }
