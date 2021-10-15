@@ -16,5 +16,5 @@ his own family members lose weight and live healthier and happier lives!
 
 - As a user, I want to create and add members to my family
 - As a user, I want to remove certain members from the family
-- As a user, I want to view the record of all family members for comparison
-- As a user, I want to add data to certain members
+- As a user, I want to view the record of a family member's weight log
+- As a user, I want to add weight log entries to chosen member

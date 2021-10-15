@@ -3,16 +3,17 @@ package ui;
 import model.Log;
 import model.Member;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Date;
 
 
 public class FamilyWeightTrackerApp {
 
     private ArrayList<Member> family;
     private Scanner input;
-    private Date date;
+    private LocalDate date;
 
     // EFFECTS: runs the Family Weight Tracker application
     public FamilyWeightTrackerApp() {
@@ -49,7 +50,7 @@ public class FamilyWeightTrackerApp {
     private void displayMenu() {
         System.out.println("\nHow can I help you today?:");
         System.out.println("\ta -> add new member");
-        System.out.println("\tn -> add weight to chosen member");
+        System.out.println("\tn -> enter today's weight log to chosen member");
         System.out.println("\tc -> check member's weight record and BMI");
         System.out.println("\td -> select member to delete");
         System.out.println("\tq -> quit");
@@ -60,21 +61,54 @@ public class FamilyWeightTrackerApp {
     private void init() {
         input = new Scanner(System.in);
         family = new ArrayList<>();
+        date = LocalDate.now();
+        Member ethan = new Member("Ethan", 183);
+        Member bryan = new Member("Bryan", 165);
+        family.add(ethan);
+        family.add(bryan);
+        ethan.addWeightLog(75.0);
+        bryan.addWeightLog(65.0);
     }
 
     // MODIFIES: this
     // EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("a")) {
-            addMember();
-        } else if (command.equals("n")) {
-            addWeight();
-        } else if (command.equals("c")) {
-            System.out.println("producing recording");
-        } else if (command.equals("d")) {
-            System.out.println("deleting member");
-        } else {
-            System.out.println("Selection not valid...");
+        switch (command) {
+            case "a":
+                addMember();
+                break;
+            case "n":
+                addWeight();
+                break;
+            case "c":
+                checkLog();
+                break;
+            case "d":
+                deleteMember();
+                break;
+            default:
+                System.out.println("Selection not valid...");
+                break;
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds a member to the family
+    private void checkLog() {
+
+        String selection = "";
+        String nameNow;
+        Member selectedMem;
+
+        while (!(selection.equals("b"))) {
+            System.out.println("Which member's log would you like to check? Please enter their number.");
+            selectedMem = selectMember();
+            System.out.println("\nDate        Weight");
+            printWeightLog(selectedMem);
+            System.out.println("\n");
+            System.out.println("\nEnter 'b' to return!");
+            selection = input.next();
+            selection = selection.toLowerCase();
         }
     }
 
@@ -83,8 +117,8 @@ public class FamilyWeightTrackerApp {
     private void addMember() {
 
         String selection = "";  // force entry into loop
-        String nameNow = "";
-        Integer height;
+        String nameNow;
+        int height;
 
         while (!(selection.equals("b"))) {
             System.out.println("What will be the new member's name?");
@@ -100,30 +134,40 @@ public class FamilyWeightTrackerApp {
         }
     }
 
-    // MODIFIES: this
     // EFFECTS: adds weight to the chosen member
     private void addWeight() {
 
         String selection = "";  // force entry into loop
-        Integer choice;
-        Integer index = 1;
-        Double weight = 0.0;
+        Double weight;
         Member selectedMem;
 
 
         while (!(selection.equals("b"))) {
             System.out.println("Which member's weight log should we update? \n Please select the number.");
-            for (Member m: family) {
-                System.out.println(index + ". " + m.getName());
-                index++;
-            }
-            choice = input.nextInt();
-            selectedMem = family.get(choice - 1);
-            System.out.println("You have chosen: " + selectedMem.getName() + ".");
+            selectedMem = selectMember();
             System.out.println("What is your weight today? (KG)");
             weight = input.nextDouble();
             selectedMem.addWeightLog(weight);
-            System.out.println(weight + " KG has been added to " + selectedMem.getName() + "'s log!");
+            System.out.println(weight + " KG has been added to " + selectedMem.getName() + "'s log on " +  date);
+            System.out.println("\nEnter 'b' to return!");
+            selection = input.next();
+            selection = selection.toLowerCase();
+        }
+    }
+
+    //MODFIES: this
+    // EFFECTS: deletes member from the family
+    private void deleteMember() {
+
+        String selection = "";
+        Member selectedMem;
+
+        while (!(selection.equals("b"))) {
+            System.out.println("Which member would you like to delete?");
+            selectedMem = selectMember();
+            family.remove(selectedMem);
+            System.out.println(selectedMem.getName() + " has been removed :(");
+            System.out.println("\n");
             System.out.println("\nEnter 'b' to return!");
             selection = input.next();
             selection = selection.toLowerCase();
@@ -131,7 +175,34 @@ public class FamilyWeightTrackerApp {
     }
 
 
+    // EFFECTS: prints list of member on console
+    public void printListOfMember() {
+        int index = 1;
+        for (Member m: family) {
+            System.out.println(index + ". " + m.getName());
+            index++;
+        }
+    }
 
 
+
+    // EFFECTS: prints weight log of given member
+    public void printWeightLog(Member mem) {
+        for (Log log: mem.getWeightLog()) {
+            System.out.println(log.getDate() + "    " + log.getWeight() + " KG");
+        }
+    }
+
+
+    // EFFECTS: prompts and returns selected member
+    public Member selectMember() {
+        int choice;
+        Member selectedMem;
+        printListOfMember();
+        choice = input.nextInt();
+        selectedMem = family.get(choice - 1);
+        System.out.println("You have chosen: " + selectedMem.getName() + ".");
+        return selectedMem;
+    }
 
 }

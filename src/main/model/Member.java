@@ -27,6 +27,10 @@ public class Member {
         return name;
     }
 
+    public ArrayList<Log> getWeightLog() {
+        return weightLog;
+    }
+
     public int getHeight() {
         return height;
     }
