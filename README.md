@@ -25,3 +25,8 @@ as well!
 - As a user, I want to remove certain members from the family
 - As a user, I want to view the record of a family member's weight log
 - As a user, I want to add weight log entries to chosen member
+
+#### Data Persistence
+
+- As a user, when I quit the application, I want it to auto-save the entire state of the program unless specifed otherwise
+- As a user, I want to load a file/data from another time
