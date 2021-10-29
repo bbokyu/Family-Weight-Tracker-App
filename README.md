@@ -28,5 +28,5 @@ as well!
 
 #### Data Persistence
 
-- As a user, when I quit the application, I want to save the entire state of the program unless specified otherwise
+- As a user, I want to save the entire state of the program
 - As a user, I want to load a file/data from another time
