@@ -1,9 +1,12 @@
 package model;
 
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.time.LocalDate;
 
-public class Log {
+public class Log implements Writable {
 
     private Double weight;
     private LocalDate date;
@@ -20,5 +23,14 @@ public class Log {
 
     public LocalDate getDate() {
         return date;
+    }
+
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("weight", weight);
+        json.put("date", date);
+        return json;
     }
 }

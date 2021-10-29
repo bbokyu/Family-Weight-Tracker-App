@@ -1,12 +1,15 @@
 package model;
 
 import model.exceptions.NegativeValueException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
 
 import java.util.ArrayList;
 
 
 
-public class Member {
+public class Member implements Writable {
 
     private String name;
     private int height;
@@ -43,7 +46,25 @@ public class Member {
     }
 
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("height", height);
+        json.put("weightLog", weightLogToJson());
+        return json;
+    }
 
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray weightLogToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Log l : weightLog) {
+            jsonArray.put(l.toJson());
+        }
+
+        return jsonArray;
+    }
 
 
 }
