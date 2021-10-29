@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class JsonReader {
@@ -25,23 +26,25 @@ public class JsonReader {
         this.source = source;
     }
 
+
+
     // EFFECTS: reads member from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public Member read() throws IOException {
+    public ArrayList<Member> read() throws IOException {
         String jsonData = readFile(source);
-        JSONObject jsonObject = new JSONObject(jsonData);
-        return parseMember(jsonObject);
+        JSONArray jsonArray = new JSONArray(jsonData);
+        return parseFamily(jsonArray);
     }
 
-    // EFFECTS: reads source file as string and returns it
-    private String readFile(String source) throws IOException {
-        StringBuilder contentBuilder = new StringBuilder();
-
-        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
-            stream.forEach(contentBuilder::append);
+    private ArrayList<Member> parseFamily(JSONArray jsonArray) {
+        ArrayList<Member> family = new ArrayList<>();
+        for (Object j: jsonArray) {
+            JSONObject nextMember  = (JSONObject) j;
+            family.add(parseMember(nextMember));
         }
-        return contentBuilder.toString();
+        return family;
     }
+
 
     // EFFECTS: parses member from JSON object and returns it
     private Member parseMember(JSONObject jsonObject) {
@@ -74,6 +77,16 @@ public class JsonReader {
         Log log = new Log(weight);
         log.updateDate(date);
         m.addLogToWeightLog(log);
+    }
+
+    // EFFECTS: reads source file as string and returns it
+    private String readFile(String source) throws IOException {
+        StringBuilder contentBuilder = new StringBuilder();
+
+        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
+            stream.forEach(contentBuilder::append);
+        }
+        return contentBuilder.toString();
     }
 
 

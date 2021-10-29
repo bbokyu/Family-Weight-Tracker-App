@@ -133,9 +133,9 @@ public class FamilyWeightTrackerApp {
     // EFFECTS: loads the workroom to file
     private void loadMember() {
         try {
-            Member m = jsonReader.read();
-            family.add(m);
-            System.out.println("Loaded " + m.getName() + " from " + JSON_STORE);
+            ArrayList<Member> fam = jsonReader.read();
+            this.family = fam;
+            System.out.println("Loaded family from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
