@@ -9,25 +9,27 @@ import java.time.LocalDate;
 public class Log implements Writable {
 
     private Double weight;
-    private LocalDate date;
+    private String date;
 
     // A log represents a single entry, tracking their weight and the date
     public Log(Double weight) {
         this.weight = weight;
-        date = LocalDate.now();
+        LocalDate dateToday = LocalDate.now();
+        String dateTodayInString = dateToday.toString();
+        this.date = dateTodayInString;
     }
 
     public Double getWeight() {
         return weight;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
     // MODIFIES: this
     // EFFECTS: changes the date of the log to given date
-    public void updateDate(LocalDate givenDate) {
+    public void updateDate(String givenDate) {
         this.date = givenDate;
     }
 

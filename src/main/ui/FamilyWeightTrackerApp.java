@@ -3,7 +3,11 @@ package ui;
 import model.Log;
 import model.Member;
 import model.exceptions.NegativeValueException;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -11,12 +15,17 @@ import java.util.Scanner;
 
 public class FamilyWeightTrackerApp {
 
+    private static final String JSON_STORE = "./data/member.json";
     private ArrayList<Member> family;
     private Scanner input;
     private LocalDate date;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the Family Weight Tracker application
     public FamilyWeightTrackerApp() {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runApp();
     }
 
@@ -55,6 +64,8 @@ public class FamilyWeightTrackerApp {
         System.out.println("\tn -> enter today's weight log to chosen member");
         System.out.println("\tc -> check member's weight record and BMI");
         System.out.println("\td -> select member to delete");
+        System.out.println("\ts -> save family to file");
+        System.out.println("\tl -> load family from file");
         System.out.println("\tq -> quit");
     }
 
@@ -93,11 +104,43 @@ public class FamilyWeightTrackerApp {
             case "d":
                 deleteMember();
                 break;
+            case "s":
+                saveMember();
+                break;
+            case "l":
+                loadMember();
+                break;
+
             default:
                 System.out.println("Selection not valid...");
                 break;
         }
     }
+
+    // EFFECTS: saves the workroom to file
+    private void saveMember() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(family);
+            jsonWriter.close();
+            System.out.println("Saved all members of family to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+
+    // EFFECTS: loads the workroom to file
+    private void loadMember() {
+        try {
+            Member m = jsonReader.read();
+            family.add(m);
+            System.out.println("Loaded " + m.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
+
 
 
     // EFFECTS: Prints out the selected member's log

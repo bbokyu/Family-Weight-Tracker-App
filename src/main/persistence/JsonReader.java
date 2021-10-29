@@ -70,7 +70,7 @@ public class JsonReader {
     // EFFECTS: parses Log from JSON object and adds it to Member
     private void addLog(Member m, JSONObject jsonObject) throws NegativeValueException {
         Double weight = jsonObject.getDouble("weight");
-        LocalDate date = (LocalDate) jsonObject.get("date");
+        String date = jsonObject.getString("date");
         Log log = new Log(weight);
         log.updateDate(date);
         m.addLogToWeightLog(log);

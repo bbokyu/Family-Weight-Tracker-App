@@ -1,11 +1,13 @@
 package persistence;
 
 import model.Member;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 // Modeled from JsonSerializationDemo
 // Represents a writer that writes JSON representation of member to file
@@ -29,9 +31,12 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
-    public void write(Member m) {
-        JSONObject json = m.toJson();
-        saveToFile(json.toString(TAB));
+    public void write(ArrayList<Member> family) {
+        JSONArray jsonArray = new JSONArray();
+        for (Member m: family) {
+            jsonArray.put(m.toJson());
+        }
+        saveToFile(jsonArray.toString(TAB));
     }
 
     // MODIFIES: this
