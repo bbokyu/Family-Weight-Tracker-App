@@ -27,6 +27,16 @@ public class MemberTest {
     }
 
     @Test
+    void addLogToWeightLogTest() {
+        Log log = new Log(10.0);
+        testMember.addLogToWeightLog(log);
+        Log testLog = testMember.getWeightLogs().get(0);
+        String date = LocalDate.now().toString();
+        assertEquals(10.0, testLog.getWeight());
+        assertEquals(date, testLog.getDate());
+    }
+
+    @Test
     void testAddWeightLog() {
         try {
             testMember.addWeightLog(10.0);
@@ -34,9 +44,10 @@ public class MemberTest {
             e.printStackTrace();
         }
         LocalDate today = LocalDate.now();
+        String to = today.toString();
         ArrayList<Log> tempLog = testMember.getWeightLogs();
         assertEquals(tempLog.get(0).getWeight(),10.0);
-        assertEquals(tempLog.get(0).getDate(),today);
+        assertEquals(tempLog.get(0).getDate(),to);
     }
 
     @Test
@@ -54,7 +65,7 @@ public class MemberTest {
             e.printStackTrace();
         }
         assertEquals(testMember.getWeightLogs().get(0).getWeight(), 10.0);
-        assertEquals(testMember.getWeightLogs().get(0).getDate(), LocalDate.now());
+        assertEquals(testMember.getWeightLogs().get(0).getDate(), LocalDate.now().toString());
 
     }
 

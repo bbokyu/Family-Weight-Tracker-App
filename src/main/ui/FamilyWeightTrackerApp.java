@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class FamilyWeightTrackerApp {
 
-    private static final String JSON_STORE = "./data/member.json";
+    private static final String JSON_STORE = "./data/family.json";
     private ArrayList<Member> family;
     private Scanner input;
     private LocalDate date;

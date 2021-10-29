@@ -20,7 +20,8 @@ public class LogTest {
     @Test
     void testConstructor() {
         LocalDate today = LocalDate.now();
-        assertEquals(testLog.getDate(), today);
+        String to = today.toString();
+        assertEquals(testLog.getDate(), to);
         assertEquals(testLog.getWeight(), 10.2);
     }
 
@@ -32,7 +33,15 @@ public class LogTest {
     @Test
     void testGetDate() {
         LocalDate today = LocalDate.now();
-        assertEquals(testLog.getDate(), today);
+        String to = today.toString();
+        assertEquals(testLog.getDate(), to);
+    }
+
+    @Test
+    void updateDateTest() {
+        Log log = new Log(10.0);
+        log.updateDate("21-10-01");
+        assertEquals("21-10-01", log.getDate());
     }
 
 }

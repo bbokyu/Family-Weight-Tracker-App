@@ -15,8 +15,7 @@ public class Log implements Writable {
     public Log(Double weight) {
         this.weight = weight;
         LocalDate dateToday = LocalDate.now();
-        String dateTodayInString = dateToday.toString();
-        this.date = dateTodayInString;
+        this.date = dateToday.toString();
     }
 
     public Double getWeight() {
