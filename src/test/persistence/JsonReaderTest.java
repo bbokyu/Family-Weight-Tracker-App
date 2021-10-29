@@ -1,6 +1,7 @@
 package persistence;
 
 import model.Member;
+import model.exceptions.NegativeValueException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -52,6 +53,10 @@ class JsonReaderTest extends JsonTest {
             fail("Couldn't read from file");
         }
     }
+
+
+
+
 
 
 

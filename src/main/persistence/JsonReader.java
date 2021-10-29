@@ -61,17 +61,13 @@ public class JsonReader {
         JSONArray jsonArray = jsonObject.getJSONArray("weightLog");
         for (Object json : jsonArray) {
             JSONObject nextLog = (JSONObject) json;
-            try {
-                addLog(m, nextLog);
-            } catch (NegativeValueException e) {
-                System.out.println("Recalled Negative weight from file");
-            }
+            addLog(m, nextLog);
         }
     }
 
     // MODIFIES: m
     // EFFECTS: parses Log from JSON object and adds it to Member
-    private void addLog(Member m, JSONObject jsonObject) throws NegativeValueException {
+    private void addLog(Member m, JSONObject jsonObject) {
         Double weight = jsonObject.getDouble("weight");
         String date = jsonObject.getString("date");
         Log log = new Log(weight);

@@ -61,7 +61,7 @@ public class Member implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns things in this Weight Log as a JSON array
     private JSONArray weightLogToJson() {
         JSONArray jsonArray = new JSONArray();
 

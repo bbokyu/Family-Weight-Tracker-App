@@ -1,6 +1,7 @@
 package persistence;
 
 import model.Member;
+import model.exceptions.NegativeValueException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -50,6 +51,14 @@ class JsonWriterTest extends JsonTest {
             ArrayList<Member> family = new ArrayList<>();
             Member ethan = new Member("Ethan", 183);
             Member bryan = new Member("Bryan", 165);
+            try {
+                ethan.addWeightLog(10.0);
+                ethan.addWeightLog(11.0);
+                bryan.addWeightLog(10.0);
+                bryan.addWeightLog(11.0);
+            } catch (NegativeValueException e) {
+                e.printStackTrace();
+            }
             family.add(ethan);
             family.add(bryan);
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralFamily.json");
@@ -67,11 +76,16 @@ class JsonWriterTest extends JsonTest {
             assertEquals("Bryan", bryan.getName());
             assertEquals(183, ethan.getHeight());
             assertEquals(165, bryan.getHeight());
+            assertEquals(10.0, ethan.getWeightLogs().get(0).getWeight());
+            assertEquals(11.0, ethan.getWeightLogs().get(1).getWeight());
+            assertEquals(10.0, bryan.getWeightLogs().get(0).getWeight());
+            assertEquals(11.0, bryan.getWeightLogs().get(1).getWeight());
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
     }
+
 
 
 }
