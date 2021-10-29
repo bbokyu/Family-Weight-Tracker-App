@@ -25,6 +25,12 @@ public class Log implements Writable {
         return date;
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes the date of the log to given date
+    public void updateDate(LocalDate givenDate) {
+        this.date = givenDate;
+    }
+
 
     @Override
     public JSONObject toJson() {

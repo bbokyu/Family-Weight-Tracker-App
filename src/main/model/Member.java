@@ -33,6 +33,12 @@ public class Member implements Writable {
         weightLog.add(temp);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Adds given log to member's weight log
+    public void addLogToWeightLog(Log log) {
+        weightLog.add(log);
+    }
+
     public String getName() {
         return name;
     }
