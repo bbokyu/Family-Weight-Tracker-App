@@ -1,6 +1,10 @@
 package ui;
 
+import model.Log;
 import model.Member;
+import model.exceptions.NegativeValueException;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -8,9 +12,12 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sun.tools.internal.xjc.reader.Ring.add;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class GUI implements ActionListener, ListSelectionListener {
@@ -51,14 +58,26 @@ public class GUI implements ActionListener, ListSelectionListener {
     private JScrollPane listScroller;
     private DefaultListModel listModel;
 
+    // add weight log
+    private JFrame addWeightLogFrame;
+    private JTextField weightField;
+
+    // Json
+    private static final String JSON_STORE = "./data/family.json";
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+
     public GUI()  {
 
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         family = new ArrayList<>();
 
         Member ethan = new Member("Ethan", 183);
         Member bryan = new Member("Bryan", 165);
         family.add(ethan);
         family.add(bryan);
+
 
 
         initMain();
@@ -239,7 +258,6 @@ public class GUI implements ActionListener, ListSelectionListener {
 
 
         deleteButton = new JButton("Delete Member");
-        deleteButton.addActionListener(this);
         deleteButton.setBounds(175,350,125,50);
         deleteButton.addActionListener(new DeleteMemberListener());
 
@@ -256,9 +274,9 @@ public class GUI implements ActionListener, ListSelectionListener {
         namesOfMembers.setLayoutOrientation(JList.VERTICAL);
         namesOfMembers.setVisibleRowCount(4);
         namesOfMembers.addListSelectionListener(this);
-        namesOfMembers.setBounds(150,100,200,200);
+        namesOfMembers.setBounds(150,100,200,150);
         listScroller = new JScrollPane(namesOfMembers);
-        listScroller.setBounds(175,100,125,200);
+        listScroller.setBounds(175,100,125,150);
         return listScroller;
     }
 
@@ -276,10 +294,84 @@ public class GUI implements ActionListener, ListSelectionListener {
 
     private void addWeightToMember() {
 
+        addWeightLogFrame = new JFrame();
+
+        subTitle = new JLabel("Select Member and add today's weight:");
+        subTitle.setBounds(100,50,250,50);
+
+        addWeightLogFrame.setTitle("Create and add member");
+        addWeightLogFrame.setSize(500,500);
+        addWeightLogFrame.setResizable(false);
+        addWeightLogFrame.setLayout(null);
+        addWeightLogFrame.setVisible(true);
+
+        List<String> listOfNames = getFamilyNames();
+        listModel = new DefaultListModel();
+        for (String str : listOfNames) {
+            listModel.addElement(str);
+        }
+
+        JScrollPane listScroller = initList();
+
+
+        JButton addWeightLogButton = new JButton("Add Weight");
+        addWeightLogButton.addActionListener(this);
+        addWeightLogButton.setBounds(175,350,125,50);
+        addWeightLogButton.addActionListener(new AddWeightLogListener());
+
+
+        weightField = new JTextField();
+        weightField.setBounds(200, 300,100,25);
+        JLabel weightFieldLabel = new JLabel("Enter Weight (KG): ");
+        weightFieldLabel.setBounds(75,300,159,25);
+
+        addToWeightLogFrame(listScroller, addWeightLogButton, weightFieldLabel);
+
     }
 
+    private void addToWeightLogFrame(JScrollPane listScroller, JButton addWeightLogButton, JLabel weightFieldLabel) {
+        addWeightLogFrame.add(weightFieldLabel);
+        addWeightLogFrame.add(addWeightLogButton);
+        addWeightLogFrame.add(listScroller);
+        addWeightLogFrame.add(subTitle);
+        addWeightLogFrame.add(weightField);
+    }
+
+    // ---------- check log of member
+
+    private void checkLog() {
 
 
+        JFrame checkLogFrame = new JFrame();
+
+        subTitle = new JLabel("Select Member View Log");
+        subTitle.setBounds(150,50,200,50);
+
+        checkLogFrame.setTitle("Create and add member");
+        checkLogFrame.setSize(500,500);
+        checkLogFrame.setResizable(false);
+        checkLogFrame.setLayout(null);
+        checkLogFrame.setVisible(true);
+
+
+        List<String> listOfNames = getFamilyNames();
+        listModel = new DefaultListModel();
+        for (String str : listOfNames) {
+            listModel.addElement(str);
+        }
+
+        JScrollPane listScroller = initList();
+
+
+        deleteButton = new JButton("Check Log");
+        deleteButton.setBounds(175,350,125,50);
+        deleteButton.addActionListener(new CheckLogListener());
+
+
+        checkLogFrame.add(deleteButton);
+        checkLogFrame.add(listScroller);
+        checkLogFrame.add(subTitle);
+    }
 
 
     class AddMemberListener implements ActionListener {
@@ -287,6 +379,117 @@ public class GUI implements ActionListener, ListSelectionListener {
             family.add(createMember(name.getText(), height.getText()));
             addMemberFrame.setVisible(false);
         }
+
+    }
+
+    class AddWeightLogListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //This method can be called only if
+            //there's a valid selection
+            //so go ahead and remove whatever's selected.
+            int index = namesOfMembers.getSelectedIndex();
+
+            Double weightFieldNum = Double.valueOf(weightField.getText());
+
+            Member tempMem = family.get(index);
+            try {
+                tempMem.addWeightLog(weightFieldNum);
+            } catch (NegativeValueException ex) {
+                ex.printStackTrace();
+            }
+
+
+            showMessageDialog(null, "Added Weight Log of " + weightFieldNum + " KG to "
+                    + tempMem.getName() + "!");
+
+            int size = listModel.getSize();
+
+            if (size == 0) { //Nobody's left, disable firing.
+                addWeightButton.setEnabled(false);
+
+            } else { //Select an index.
+                if (index == listModel.getSize()) {
+                    //removed item in last position
+                    index--;
+                }
+
+                namesOfMembers.setSelectedIndex(index);
+                namesOfMembers.ensureIndexIsVisible(index);
+            }
+        }
+
+    }
+
+    class CheckLogListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //This method can be called only if
+            //there's a valid selection
+            //so go ahead and remove whatever's selected.
+            int index = namesOfMembers.getSelectedIndex();
+            Member tempMem = family.get(index);
+            viewMemberLog(tempMem);
+
+
+            int size = listModel.getSize();
+
+            if (size == 0) { //Nobody's left, disable firing.
+                checkLogButton.setEnabled(false);
+
+            } else { //Select an index.
+                if (index == listModel.getSize()) {
+                    //removed item in last position
+                    index--;
+                }
+
+                namesOfMembers.setSelectedIndex(index);
+                namesOfMembers.ensureIndexIsVisible(index);
+            }
+        }
+    }
+
+    private void viewMemberLog(Member m) {
+
+        JFrame memberLogFrame = new JFrame();
+
+        subTitle = new JLabel("Select Member View Log");
+        subTitle.setBounds(150,50,200,50);
+
+        memberLogFrame.setTitle("Weight Log");
+        memberLogFrame.setSize(400,450);
+        memberLogFrame.setResizable(false);
+        memberLogFrame.setLayout(null);
+        memberLogFrame.setVisible(true);
+
+        String[] columnNames = {
+                "Date",
+                "Weight (KG)"};
+
+        List<List<String>> arr = new ArrayList<>();
+
+        for (Log l : m.getWeightLogs()) {
+            List<String> row = new ArrayList<>();
+            row.add(l.getDate());
+            row.add(l.getWeight().toString());
+            arr.add(row);
+        }
+
+        Object[][] data = new Object[arr.size()][2];
+        int index = 0;
+        for (List<String> stuff : arr) {
+            data[index][0] = stuff.get(0);
+            data[index][1] = stuff.get(1);
+            index++;
+        }
+
+
+
+        final JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(75,40,250,300);
+
+        memberLogFrame.add(scrollPane);
+
 
     }
 
@@ -332,23 +535,43 @@ public class GUI implements ActionListener, ListSelectionListener {
         if (e.getSource() == addWeightButton) {
             addWeightToMember();
         }
+        if (e.getSource() == checkLogButton) {
+            checkLog();
+        }
+        if (e.getSource() == saveButton) {
+            saveFamily();
+        }
+        if (e.getSource() == loadButton) {
+            loadFamily();
+        }
 
     }
 
+    private void loadFamily() {
+        try {
+            ArrayList<Member> fam = jsonReader.read();
+            this.family = fam;
+            showMessageDialog(null, "Loaded family from " + JSON_STORE);
+        } catch (IOException e) {
+            showMessageDialog(null, "Unable to read from file: " + JSON_STORE);
+        }
+    }
+
+    private void saveFamily() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(family);
+            jsonWriter.close();
+            showMessageDialog(null, "Saved all members of family to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            showMessageDialog(null, "Unable to write to file: " + JSON_STORE);
+        }
+    }
 
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            if (namesOfMembers.getSelectedIndex() == -1) {
-                //No selection, disable fire button.
-                deleteButton.setEnabled(false);
 
-            } else {
-                //Selection, enable the fire button.
-                deleteButton.setEnabled(true);
-            }
-        }
     }
 
 
