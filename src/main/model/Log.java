@@ -6,12 +6,13 @@ import persistence.Writable;
 
 import java.time.LocalDate;
 
+// A log represents a single entry, tracking their weight and the date as type strings
 public class Log implements Writable {
 
     private Double weight;
     private String date;
 
-    // A log represents a single entry, tracking their weight and the date
+    // Log constructor, creates a log with today's date
     public Log(Double weight) {
         this.weight = weight;
         LocalDate dateToday = LocalDate.now();
@@ -33,6 +34,7 @@ public class Log implements Writable {
     }
 
 
+    // EFFECTS: returns Log as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

@@ -30,7 +30,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of family to file
     public void write(ArrayList<Member> family) {
         JSONArray jsonArray = new JSONArray();
         for (Member m: family) {

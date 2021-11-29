@@ -18,7 +18,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+// Modeled from JsonSerializationDemo
+// Represents a reader that reads from JSON representation of family (list of members)
 public class JsonReader {
+
     private String source;
 
     // EFFECTS: constructs reader to read from source file
@@ -36,6 +39,7 @@ public class JsonReader {
         return parseFamily(jsonArray);
     }
 
+    // EFFECTS: Parses family from JSON object
     private ArrayList<Member> parseFamily(JSONArray jsonArray) {
         ArrayList<Member> family = new ArrayList<>();
         for (Object j: jsonArray) {
@@ -46,7 +50,7 @@ public class JsonReader {
     }
 
 
-    // EFFECTS: parses member from JSON object and returns it
+    // EFFECTS: Parses member from JSON object and returns it
     private Member parseMember(JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         int height = jsonObject.getInt("height");
@@ -55,8 +59,8 @@ public class JsonReader {
         return m;
     }
 
-    // MODIFIES: m
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+
+    // EFFECTS: parses weight log from JSON object
     private void addWeightLog(Member m, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("weightLog");
         for (Object json : jsonArray) {
@@ -65,7 +69,7 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: m
+
     // EFFECTS: parses Log from JSON object and adds it to Member
     private void addLog(Member m, JSONObject jsonObject) {
         Double weight = jsonObject.getDouble("weight");

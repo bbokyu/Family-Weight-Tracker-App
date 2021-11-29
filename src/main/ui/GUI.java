@@ -20,6 +20,8 @@ import java.util.List;
 import static com.sun.tools.internal.xjc.reader.Ring.add;
 import static javax.swing.JOptionPane.showMessageDialog;
 
+// Main class for UI
+// Navigate regions using shortcut Command + Option + Period (MAC), Ctrl + Alt + Period (PC)
 public class GUI implements ActionListener, ListSelectionListener {
 
     private Panel firstPanel;
@@ -53,10 +55,10 @@ public class GUI implements ActionListener, ListSelectionListener {
     // remove member
     private JLabel subTitle;
     private JButton deleteButton;
-    private JList namesOfMembers;
+    private JList<String> namesOfMembers;
     private JFrame deleteMemberFrame;
     private JScrollPane listScroller;
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
 
     // add weight log
     private JFrame addWeightLogFrame;
@@ -67,18 +69,20 @@ public class GUI implements ActionListener, ListSelectionListener {
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
 
+
+    // GUI constructor that initializes main menu and JSON
     public GUI()  {
+
 
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         family = new ArrayList<>();
 
+        // example members
         Member ethan = new Member("Ethan", 183);
         Member bryan = new Member("Bryan", 165);
         family.add(ethan);
         family.add(bryan);
-
-
 
         initMain();
         addMenuButtons();
@@ -86,6 +90,8 @@ public class GUI implements ActionListener, ListSelectionListener {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates main menu frame and first panel and second panel
     private void initMain() {
 
         mainMenu = new MyFrame();
@@ -104,13 +110,13 @@ public class GUI implements ActionListener, ListSelectionListener {
         title.setBounds(120,10,300,50);
 
         // second panel
-
         secondPanel = new Panel();
         secondPanel.setBounds(0, 50,500,700);
         secondPanel.setBackground(Color.decode("#FEC89A"));
         secondPanel.setLayout(null);
     }
 
+    // EFFECTS: adds panels and buttons to corresponding component
     private void addToFrameAndPanel() {
         mainMenu.add(firstPanel);
         mainMenu.add(secondPanel);
@@ -122,6 +128,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         secondPanel.add(loadButton);
     }
 
+    // EFFECTS: creates buttons for the main menu
     private void addMenuButtons() {
         addPersonButton();
         removePersonButton();
@@ -131,6 +138,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         loadButton();
     }
 
+    // EFFECTS: creates the load button
     private void loadButton() {
         loadButton = new JButton();
         loadButton.addActionListener(this);
@@ -138,6 +146,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         loadButton.setBounds(150, 425, 200, 50);
     }
 
+    // EFFECTS: creates the save button
     private void saveButton() {
         saveButton = new JButton();
         saveButton.addActionListener(this);
@@ -145,6 +154,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         saveButton.setBounds(150, 350, 200, 50);
     }
 
+    // EFFECTS: creates the Check Log button
     private void checkLogButton() {
         checkLogButton = new JButton();
         checkLogButton.addActionListener(this);
@@ -152,6 +162,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         checkLogButton.setBounds(150, 275, 200, 50);
     }
 
+    // EFFECTS: creates the add weight button
     private void addWeightButton() {
         addWeightButton = new JButton();
         addWeightButton.addActionListener(this);
@@ -159,6 +170,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         addWeightButton.setBounds(150, 200, 200, 50);
     }
 
+    // EFFECTS: creates the remove person button
     private void removePersonButton() {
         removePersonButton = new JButton();
         removePersonButton.addActionListener(this);
@@ -166,6 +178,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         removePersonButton.setBounds(150, 125, 200, 50);
     }
 
+    // EFFECTS: creates the add person button
     private void addPersonButton() {
         addPersonButton = new JButton();
         addPersonButton.addActionListener(this);
@@ -174,12 +187,13 @@ public class GUI implements ActionListener, ListSelectionListener {
     }
 
 
+    // main class that instantiates GUI
     public static void main(String[] args) {
         new GUI();
     }
 
-    // creates new member and adds it to family _________________________________________________________
-
+    //region Add Member
+    // creates UI for adding member
     private void addMember() {
 
         addMemberFrame = new JFrame();
@@ -223,17 +237,26 @@ public class GUI implements ActionListener, ListSelectionListener {
         name.setBounds(150, 100,200,50);
     }
 
-    public ArrayList<String> getFamilyNames() {
-        ArrayList<String> temp = new ArrayList<>();
-        for (Member m: family) {
-            temp.add(m.getName());
+
+    class AddMemberListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            family.add(createMember(name.getText(), height.getText()));
+            addMemberFrame.setVisible(false);
         }
-        return temp;
     }
 
+    private Member createMember(String text, String heightText) {
+        int temp = Integer.parseInt(heightText);
+        showMessageDialog(null, text + " has been added to the family!");
+        return member = new Member(text, temp);
+    }
 
-    // ______________________ remove member
+    //endregion
 
+
+    //region Remove Member
+    // MODIFIES: this
+    // EFFECTS: creates UI for removing member
     public void removeMember() {
 
         deleteMemberFrame = new JFrame();
@@ -249,7 +272,7 @@ public class GUI implements ActionListener, ListSelectionListener {
 
 
         List<String> listOfNames = getFamilyNames();
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         for (String str : listOfNames) {
             listModel.addElement(str);
         }
@@ -269,7 +292,7 @@ public class GUI implements ActionListener, ListSelectionListener {
     }
 
     private JScrollPane initList() {
-        namesOfMembers = new JList(listModel); //data has type Object[]
+        namesOfMembers = new JList<>(listModel); //data has type Object[]
         namesOfMembers.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         namesOfMembers.setLayoutOrientation(JList.VERTICAL);
         namesOfMembers.setVisibleRowCount(4);
@@ -280,18 +303,45 @@ public class GUI implements ActionListener, ListSelectionListener {
         return listScroller;
     }
 
+    // part of code modelled from:
+    // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html#ListDemo
+    // action listener class for delete member
+    class DeleteMemberListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //This method can be called only if
+            //there's a valid selection
+            //so go ahead and remove whatever's selected.
+            int index = namesOfMembers.getSelectedIndex();
+            listModel.remove(index);
+            Member tempMember = family.get(index);
+            family.remove(index);
+            showMessageDialog(null, tempMember.getName() + " has been removed from the family");
+            deleteMemberFrame.setVisible(false);
 
+            int size = listModel.getSize();
 
+            if (size == 0) { //Nobody's left, disable firing.
+                deleteButton.setEnabled(false);
 
-    private Member createMember(String text, String heightText) {
-        int temp = Integer.parseInt(heightText);
-        showMessageDialog(null, text + " has been added to the family!");
-        return member = new Member(text, temp);
+            } else { //Select an index.
+                if (index == listModel.getSize()) {
+                    //removed item in last position
+                    index--;
+                }
+
+                namesOfMembers.setSelectedIndex(index);
+                namesOfMembers.ensureIndexIsVisible(index);
+            }
+        }
     }
 
-    //_________Add weight log
+    //endregion
 
 
+
+    //region Add Weight Log
+    // MODIFIES: this
+    // EFFECTS: creates UI for adding weight to member
     private void addWeightToMember() {
 
         addWeightLogFrame = new JFrame();
@@ -306,7 +356,7 @@ public class GUI implements ActionListener, ListSelectionListener {
         addWeightLogFrame.setVisible(true);
 
         List<String> listOfNames = getFamilyNames();
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         for (String str : listOfNames) {
             listModel.addElement(str);
         }
@@ -329,6 +379,7 @@ public class GUI implements ActionListener, ListSelectionListener {
 
     }
 
+    // EFFECTS: add components to add weight log frame
     private void addToWeightLogFrame(JScrollPane listScroller, JButton addWeightLogButton, JLabel weightFieldLabel) {
         addWeightLogFrame.add(weightFieldLabel);
         addWeightLogFrame.add(addWeightLogButton);
@@ -337,10 +388,48 @@ public class GUI implements ActionListener, ListSelectionListener {
         addWeightLogFrame.add(weightField);
     }
 
-    // ---------- check log of member
+    // part of code modelled from:
+    // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html#ListDemo
+    //  action listener for
+    class AddWeightLogListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            int index = namesOfMembers.getSelectedIndex();
 
+            Double weightFieldNum = Double.valueOf(weightField.getText());
+
+            Member tempMem = family.get(index);
+            try {
+                tempMem.addWeightLog(weightFieldNum);
+            } catch (NegativeValueException ex) {
+                ex.printStackTrace();
+            }
+
+            showMessageDialog(null, "Added Weight Log of " + weightFieldNum + " KG to "
+                    + tempMem.getName() + "!");
+
+            int size = listModel.getSize();
+
+            if (size == 0) {
+                addWeightButton.setEnabled(false);
+
+            } else {
+                if (index == listModel.getSize()) {
+                    index--;
+                }
+
+                namesOfMembers.setSelectedIndex(index);
+                namesOfMembers.ensureIndexIsVisible(index);
+            }
+        }
+
+    }
+    //endregion
+
+
+    //region Check Log
+    // MODIFIES: this
+    // EFFECTS: creates UI for checking a members weight log
     private void checkLog() {
-
 
         JFrame checkLogFrame = new JFrame();
 
@@ -353,100 +442,53 @@ public class GUI implements ActionListener, ListSelectionListener {
         checkLogFrame.setLayout(null);
         checkLogFrame.setVisible(true);
 
-
         List<String> listOfNames = getFamilyNames();
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<String>();
         for (String str : listOfNames) {
             listModel.addElement(str);
         }
 
         JScrollPane listScroller = initList();
 
-
         deleteButton = new JButton("Check Log");
         deleteButton.setBounds(175,350,125,50);
         deleteButton.addActionListener(new CheckLogListener());
-
 
         checkLogFrame.add(deleteButton);
         checkLogFrame.add(listScroller);
         checkLogFrame.add(subTitle);
     }
 
-
-    class AddMemberListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            family.add(createMember(name.getText(), height.getText()));
-            addMemberFrame.setVisible(false);
-        }
-
-    }
-
-    class AddWeightLogListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
-            int index = namesOfMembers.getSelectedIndex();
-
-            Double weightFieldNum = Double.valueOf(weightField.getText());
-
-            Member tempMem = family.get(index);
-            try {
-                tempMem.addWeightLog(weightFieldNum);
-            } catch (NegativeValueException ex) {
-                ex.printStackTrace();
-            }
-
-
-            showMessageDialog(null, "Added Weight Log of " + weightFieldNum + " KG to "
-                    + tempMem.getName() + "!");
-
-            int size = listModel.getSize();
-
-            if (size == 0) { //Nobody's left, disable firing.
-                addWeightButton.setEnabled(false);
-
-            } else { //Select an index.
-                if (index == listModel.getSize()) {
-                    //removed item in last position
-                    index--;
-                }
-
-                namesOfMembers.setSelectedIndex(index);
-                namesOfMembers.ensureIndexIsVisible(index);
-            }
-        }
-
-    }
-
+    // part of code modelled from:
+    // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html#ListDemo
+    // action listener class check log
     class CheckLogListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
+
             int index = namesOfMembers.getSelectedIndex();
             Member tempMem = family.get(index);
             viewMemberLog(tempMem);
-
-
             int size = listModel.getSize();
 
-            if (size == 0) { //Nobody's left, disable firing.
+            if (size == 0) {
                 checkLogButton.setEnabled(false);
-
-            } else { //Select an index.
+            } else {
                 if (index == listModel.getSize()) {
-                    //removed item in last position
                     index--;
                 }
-
                 namesOfMembers.setSelectedIndex(index);
                 namesOfMembers.ensureIndexIsVisible(index);
             }
         }
     }
 
+
+
+
+
+
+
+    // EFFECTS: creates table UI for given member
     private void viewMemberLog(Member m) {
 
         JFrame memberLogFrame = new JFrame();
@@ -464,6 +506,18 @@ public class GUI implements ActionListener, ListSelectionListener {
                 "Date",
                 "Weight (KG)"};
 
+        Object[][] data = createTableData(m);
+
+        final JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(75,40,250,300);
+
+        memberLogFrame.add(scrollPane);
+    }
+
+    // EFFECTS: creates 2D array of data from given member
+    private Object[][] createTableData(Member m) {
         List<List<String>> arr = new ArrayList<>();
 
         for (Log l : m.getWeightLogs()) {
@@ -480,48 +534,45 @@ public class GUI implements ActionListener, ListSelectionListener {
             data[index][1] = stuff.get(1);
             index++;
         }
-
-
-
-        final JTable table = new JTable(data, columnNames);
-        table.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(75,40,250,300);
-
-        memberLogFrame.add(scrollPane);
-
-
+        return data;
     }
+    //endregion
 
-    class DeleteMemberListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
-            int index = namesOfMembers.getSelectedIndex();
-            listModel.remove(index);
-            System.out.println(index);
-            Member tempMember = family.get(index);
-            family.remove(index);
-            showMessageDialog(null, tempMember.getName() + " has been removed from the family");
-            deleteMemberFrame.setVisible(false);
-
-            int size = listModel.getSize();
-
-            if (size == 0) { //Nobody's left, disable firing.
-                deleteButton.setEnabled(false);
-
-            } else { //Select an index.
-                if (index == listModel.getSize()) {
-                    //removed item in last position
-                    index--;
-                }
-
-                namesOfMembers.setSelectedIndex(index);
-                namesOfMembers.ensureIndexIsVisible(index);
-            }
+    //region Load Family
+    private void loadFamily() {
+        try {
+            ArrayList<Member> fam = jsonReader.read();
+            this.family = fam;
+            showMessageDialog(null, "Loaded family from " + JSON_STORE);
+        } catch (IOException e) {
+            showMessageDialog(null, "Unable to read from file: " + JSON_STORE);
         }
     }
+    //endregion
+
+    //region Save Family
+    private void saveFamily() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(family);
+            jsonWriter.close();
+            showMessageDialog(null, "Saved all members of family to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            showMessageDialog(null, "Unable to write to file: " + JSON_STORE);
+        }
+    }
+    //endregion
+
+
+    // EFFECTS: returns an arraylist of all members' name in the family
+    public ArrayList<String> getFamilyNames() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (Member m: family) {
+            temp.add(m.getName());
+        }
+        return temp;
+    }
+
 
 
     @Override
@@ -546,28 +597,6 @@ public class GUI implements ActionListener, ListSelectionListener {
         }
 
     }
-
-    private void loadFamily() {
-        try {
-            ArrayList<Member> fam = jsonReader.read();
-            this.family = fam;
-            showMessageDialog(null, "Loaded family from " + JSON_STORE);
-        } catch (IOException e) {
-            showMessageDialog(null, "Unable to read from file: " + JSON_STORE);
-        }
-    }
-
-    private void saveFamily() {
-        try {
-            jsonWriter.open();
-            jsonWriter.write(family);
-            jsonWriter.close();
-            showMessageDialog(null, "Saved all members of family to " + JSON_STORE);
-        } catch (FileNotFoundException e) {
-            showMessageDialog(null, "Unable to write to file: " + JSON_STORE);
-        }
-    }
-
 
     @Override
     public void valueChanged(ListSelectionEvent e) {

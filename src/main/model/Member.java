@@ -8,14 +8,14 @@ import persistence.Writable;
 import java.util.ArrayList;
 
 
-
+// Member represents a single member in the family with name, height, and a list of Logs
 public class Member implements Writable {
 
     private String name;
     private int height;
     private ArrayList<Log> weightLog;
 
-    // Represents a member of family with name and weight
+    // Member constructor; assigns name and height
     public Member(String name, int height) {
         this.name = name;
         this.height = height;
@@ -52,6 +52,7 @@ public class Member implements Writable {
     }
 
 
+    // EFFECTS:  returns Member as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -61,7 +62,7 @@ public class Member implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this Weight Log as a JSON array
+    // EFFECTS: returns weight log as JSON array
     private JSONArray weightLogToJson() {
         JSONArray jsonArray = new JSONArray();
 
