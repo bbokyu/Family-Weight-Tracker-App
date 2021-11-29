@@ -16,8 +16,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.sun.tools.internal.xjc.reader.Ring.add;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 // Main class for UI
