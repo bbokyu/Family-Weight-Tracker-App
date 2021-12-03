@@ -40,3 +40,9 @@ Sample:
 
 
 ## Phase 4: Task 3
+
+
+- currently, GUI handles list of member. I would create 
+another class called Family to handle list of members
+- separate GUI class to several smaller classes instead
+of having one big GUI class
