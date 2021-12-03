@@ -30,3 +30,13 @@ as well!
 
 - As a user, I want to save the record of the family
 - As a user, I want to load a file/data of the family
+
+
+## Phase 4: Task 2
+
+Sample:
+- Add Weight log of: 123.0 to Ethan
+- Add Weight log of: 123123.0 to Bryan
+
+
+## Phase 4: Task 3

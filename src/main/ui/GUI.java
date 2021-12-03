@@ -1,5 +1,7 @@
 package ui;
 
+import model.Event;
+import model.EventLog;
 import model.Log;
 import model.Member;
 import model.exceptions.NegativeValueException;
@@ -84,8 +86,16 @@ public class GUI implements ActionListener, ListSelectionListener {
         family.add(bryan);
 
         initMain();
-        addMenuButtons();
+        createMenuButtons();
         addToFrameAndPanel();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                for (Event e : EventLog.getInstance()) {
+                    System.out.println(e.getDescription());
+                }
+            }
+        }));
 
     }
 
@@ -134,7 +144,7 @@ public class GUI implements ActionListener, ListSelectionListener {
     }
 
     // EFFECTS: creates buttons for the main menu
-    private void addMenuButtons() {
+    private void createMenuButtons() {
         addPersonButton();
         removePersonButton();
         addWeightButton();
@@ -625,6 +635,8 @@ public class GUI implements ActionListener, ListSelectionListener {
     }
 
 
+
+    // not used
     @Override
     public void valueChanged(ListSelectionEvent e) {
 

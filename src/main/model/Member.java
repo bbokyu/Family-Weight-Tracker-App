@@ -31,6 +31,8 @@ public class Member implements Writable {
         }
         Log temp = new Log(weight);
         weightLog.add(temp);
+        EventLog.getInstance().logEvent(new Event("Add Weight log of: " + temp.getWeight() + " to " + this.getName()));
+
     }
 
     //MODIFIES: this
