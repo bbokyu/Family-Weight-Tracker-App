@@ -89,15 +89,19 @@ public class GUI implements ActionListener, ListSelectionListener {
         createMenuButtons();
         addToFrameAndPanel();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-                for (Event e : EventLog.getInstance()) {
-                    System.out.println(e.getDescription());
-                }
-            }
-        }));
-
+        Runtime r = Runtime.getRuntime();
+        r.addShutdownHook(new MyThread());
     }
+
+    class MyThread extends Thread {
+        public void run() {
+            for (Event e : EventLog.getInstance()) {
+                System.out.println(e.getDescription());
+            }
+        }
+    }
+
+
 
     // MODIFIES: this
     // EFFECTS: creates main menu frame and first panel and second panel
