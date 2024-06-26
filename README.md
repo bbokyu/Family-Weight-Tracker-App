@@ -27,11 +27,13 @@ Add Weight Log: 65.0 KG to Bryan
 ```
 
 *GUI*
-![Family Weight Tracker - Add Member](./images/addmember.png)
-![Family Weight Tracker - View Log](./images/viewlog.png)
+
+<img src="./images/addmember.png" alt="Add Member" width="500"/>
+<img src="./images/viewlog.png" alt="View Log" width="500"/> 
+
 
 ## UML Diagram
-![Family Weight Tracker UML Diagram](./images/uml.png)
+<img src="./images/uml.png" alt="UML Diagram" width="800"/> 
 
 ## Improvements for the future
 - [ ] Currently, the GUI handles the list of members. I would create another class called `Family` to handle the list of members.
